@@ -1,0 +1,1178 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pokédex Entry</title>
+
+    <style>
+        :root {
+            --red: #d62f2f;
+            --red2: #b92424;
+            --panel: #e7e2d6;
+            --screen: #9bbf93;
+            --screen2: #7aa975;
+            --ink: #182018;
+            --shadow: rgba(0, 0, 0, .25);
+            --blue: #2e79ff;
+            --yellow: #ffd34a;
+            --green: #43d07f;
+            --heart: #d62f2f;
+            --pixel-dark: rgba(24, 32, 24, .85);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            background: radial-gradient(1000px 700px at 50% 30%, #2b2b2b 0%, #111 60%, #0b0b0b 100%);
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            color: #111;
+            padding: 20px;
+        }
+
+        .pokedex {
+            width: min(920px, 96vw);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            padding: 18px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, var(--red) 0%, var(--red2) 100%);
+            box-shadow: 0 30px 70px var(--shadow);
+            border: 3px solid rgba(255, 255, 255, .15);
+            position: relative;
+        }
+
+        .hinge {
+            position: absolute;
+            top: 18px;
+            bottom: 18px;
+            left: 50%;
+            width: 14px;
+            transform: translateX(-50%);
+            background: linear-gradient(180deg, rgba(0, 0, 0, .25), rgba(255, 255, 255, .08), rgba(0, 0, 0, .25));
+            border-radius: 10px;
+            opacity: .9;
+        }
+
+        .left,
+        .right {
+            background: rgba(255, 255, 255, .06);
+            border: 2px solid rgba(0, 0, 0, .25);
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .topRow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .bigLight {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #bfe4ff 0 35%, #2aa8ff 36% 70%, #0b3a9c 71% 100%);
+            border: 3px solid rgba(255, 255, 255, .55);
+            box-shadow: inset 0 0 0 3px rgba(0, 0, 0, .15);
+        }
+
+        .tinyLights {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tinyLight {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, .25);
+            box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .15);
+        }
+
+        .tl1 {
+            background: var(--blue);
+        }
+
+        .tl2 {
+            background: var(--yellow);
+        }
+
+        .tl3 {
+            background: var(--green);
+        }
+
+        .label {
+            margin-left: auto;
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, .18);
+            color: rgba(255, 255, 255, .9);
+            font-weight: 800;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .screenWrap {
+            background: var(--panel);
+            border-radius: 12px;
+            padding: 12px;
+            border: 2px solid rgba(0, 0, 0, .25);
+            box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .25);
+        }
+
+        .screen {
+            background: linear-gradient(180deg, var(--screen) 0%, var(--screen2) 100%);
+            border-radius: 10px;
+            border: 2px solid rgba(0, 0, 0, .35);
+            padding: 12px;
+            height: 270px;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            gap: 10px;
+            color: var(--ink);
+            position: relative;
+            overflow: hidden;
+            image-rendering: pixelated;
+        }
+
+        /* Deploy / emote animations */
+        .screen-deploy {
+            animation: deployFlash .6s ease-out;
+        }
+
+        .screen-emote {
+            animation: emoteShake .5s ease-out;
+        }
+
+        @keyframes deployFlash {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+                transform: scale(1);
+            }
+
+            40% {
+                box-shadow: 0 0 28px 6px rgba(255, 255, 255, .7);
+                transform: scale(1.01);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+                transform: scale(1);
+            }
+        }
+
+        @keyframes emoteShake {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-4px) rotate(-1deg);
+            }
+
+            50% {
+                transform: translateX(4px) rotate(1deg);
+            }
+
+            75% {
+                transform: translateX(-3px) rotate(-0.5deg);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .screenHeader {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 900;
+            font-size: 14px;
+            letter-spacing: .4px;
+        }
+
+        .spriteBox {
+            display: grid;
+            place-items: center;
+            border: 2px dashed rgba(0, 0, 0, .35);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .12);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pixel {
+            /* use a big tiger emoji instead of box-shadow pixels */
+            width: 10px;
+            height: 10px;
+            background: transparent;
+            position: relative;
+            transform: translateX(-140%) scale(2.2);
+            filter: drop-shadow(0 6px 0 rgba(0, 0, 0, .15));
+            opacity: .95;
+        }
+
+        /* Locked state: show greyed out tiger centered */
+        body:not(.valentine) .pixel {
+            transform: translateX(0) scale(2.2);
+        }
+
+        .pixel::before {
+            /* full tiger body instead of just the face */
+            content: "🐅";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -52%);
+            font-size: 40px; /* larger so the stripes read more clearly as a tiger */
+        }
+
+        /* Greyed out/silhouette effect when locked */
+        body:not(.valentine) .pixel::before {
+            filter: grayscale(100%) brightness(0.3) contrast(0.8);
+            opacity: 0.6;
+        }
+
+        /* Shiny variant when deployed (unlocked) */
+        body.valentine .pixel::before {
+            filter: hue-rotate(18deg) saturate(1.35) brightness(1.1);
+            text-shadow: 0 0 6px rgba(255, 255, 210, .9);
+        }
+
+        /* Little sparkle star for shiny effect */
+        .pixel::after {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        body.valentine .pixel::after {
+            content: "✦";
+            right: -6px;
+            top: 6px;
+            font-size: 18px;
+            color: #ffe066;
+            text-shadow: 0 0 8px rgba(255, 255, 200, .9);
+            animation: shinySparkle 1.4s ease-out infinite;
+        }
+
+        @keyframes shinySparkle {
+            0% {
+                transform: scale(0.4) rotate(0deg);
+                opacity: 0;
+            }
+
+            30% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1) rotate(20deg);
+                opacity: 0;
+            }
+        }
+
+        .pixel-run {
+            animation: pixelRun 1.4s ease-out;
+        }
+
+        .pixel-jump {
+            animation: pixelJump 0.7s ease-out;
+        }
+
+        /* Tiger run from right → left across the screen */
+        @keyframes pixelRun {
+            0% {
+                /* start off on the right */
+                transform: translateX(140%) scale(2.2);
+            }
+
+            50% {
+                /* pass through center */
+                transform: translateX(0) scale(2.2);
+            }
+
+            100% {
+                /* exit on the left */
+                transform: translateX(-140%) scale(2.2);
+            }
+        }
+
+        /* Emote jump: small hop in place */
+        @keyframes pixelJump {
+            0% {
+                transform: translateX(-140%) translateY(0) scale(2.2);
+            }
+
+            40% {
+                transform: translateX(-140%) translateY(-18px) scale(2.25);
+            }
+
+            70% {
+                transform: translateX(-140%) translateY(0) scale(2.2);
+            }
+
+            100% {
+                transform: translateX(-140%) translateY(-6px) scale(2.2);
+            }
+        }
+
+        .scanline {
+            position: absolute;
+            left: -10%;
+            right: -10%;
+            height: 14px;
+            background: rgba(0, 0, 0, .08);
+            transform: rotate(-8deg);
+            top: 30px;
+            animation: scan 4.2s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% {
+                top: -30px;
+            }
+
+            100% {
+                top: 320px;
+            }
+        }
+
+        .screenFooter {
+            font-size: 12px;
+            opacity: .9;
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            font-weight: 800;
+        }
+
+        .hearts {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .emoteLines {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 3;
+        }
+
+        .heart {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--heart);
+            transform: rotate(45deg);
+            animation: floatUp .9s ease-out forwards;
+            opacity: .95;
+            filter: drop-shadow(0 6px 0 rgba(0, 0, 0, .12));
+        }
+
+        .emojiBurst {
+            position: absolute;
+            font-size: 18px;
+            animation: floatUp .9s ease-out forwards;
+            opacity: .95;
+            filter: drop-shadow(0 6px 0 rgba(0, 0, 0, .12));
+        }
+
+        .wordBurst {
+            position: absolute;
+            left: 8%;
+            right: 8%;
+            bottom: 16%;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, .7);
+            animation: floatUp .9s ease-out forwards;
+            opacity: 0;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--heart);
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            left: -5px;
+            top: 0;
+        }
+
+        .heart::after {
+            left: 0;
+            top: -5px;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(45deg) scale(.9);
+                opacity: 0;
+            }
+
+            15% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-120px) rotate(45deg) scale(1.15);
+                opacity: 0;
+            }
+        }
+
+        .right .panel {
+            background: var(--panel);
+            border-radius: 12px;
+            padding: 12px;
+            border: 2px solid rgba(0, 0, 0, .25);
+            box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .25);
+            min-height: 352px;
+        }
+
+        .entryTitle {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .name {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: .3px;
+        }
+
+        .dexNo {
+            font-size: 12px;
+            font-weight: 900;
+            padding: 5px 8px;
+            border-radius: 9px;
+            background: rgba(0, 0, 0, .12);
+            white-space: nowrap;
+        }
+
+        .kv {
+            display: grid;
+            grid-template-columns: 130px 1fr;
+            gap: 10px 12px;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .6);
+            border: 1px solid rgba(0, 0, 0, .15);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .k {
+            font-weight: 900;
+            color: #222;
+        }
+
+        .v {
+            font-weight: 800;
+            color: #111;
+        }
+
+        .statStars {
+            display: inline-flex;
+            gap: 2px;
+            font-size: 14px;
+            line-height: 1;
+        }
+
+        .statStars .star {
+            color: #ffd700;
+        }
+
+        .statStars .starEmpty {
+            color: #ddd;
+            opacity: 0.4;
+        }
+
+        .note {
+            margin-top: 10px;
+            border-radius: 10px;
+            padding: 12px;
+            /* locked state base color (neutral grey) */
+            background: #e2e4e7;
+            border: 1px solid #c0c4cc;
+            min-height: 78px;
+            display: flex;
+            align-items: center;
+            font-weight: 900;
+            color: #3b4048;
+            line-height: 1.3;
+        }
+
+        .note-error {
+            background: #fde4e4;
+            border-color: #f5a4a4;
+            color: #7a1010;
+            animation: noteShake 0.35s ease-out;
+        }
+
+        @keyframes noteShake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-4px); }
+            40% { transform: translateX(4px); }
+            60% { transform: translateX(-3px); }
+            80% { transform: translateX(3px); }
+            100% { transform: translateX(0); }
+        }
+
+        .controls {
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            flex: 1;
+            appearance: none;
+            border: 0;
+            cursor: pointer;
+            padding: 11px 12px;
+            border-radius: 12px;
+            font-weight: 900;
+            letter-spacing: .3px;
+            background: rgba(0, 0, 0, .18);
+            color: rgba(255, 255, 255, .92);
+            border: 1px solid rgba(0, 0, 0, .25);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, .18);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* Appealing button colors when unlocked */
+        body.valentine #btnA {
+            background: linear-gradient(145deg, #ff6b9d, #ff8cc8);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, .3);
+            box-shadow: 0 10px 22px rgba(255, 107, 157, .4), inset 0 1px 0 rgba(255, 255, 255, .3);
+        }
+
+        body.valentine #btnA:hover {
+            background: linear-gradient(145deg, #ff5a8a, #ff7bb8);
+            box-shadow: 0 12px 28px rgba(255, 107, 157, .5), inset 0 1px 0 rgba(255, 255, 255, .4);
+        }
+
+        body.valentine #btnB {
+            background: linear-gradient(145deg, #ffd34a, #ffeb7a);
+            color: #5b4210;
+            border: 1px solid rgba(255, 255, 255, .3);
+            box-shadow: 0 10px 22px rgba(255, 211, 74, .4), inset 0 1px 0 rgba(255, 255, 255, .3);
+        }
+
+        body.valentine #btnB:hover {
+            background: linear-gradient(145deg, #ffc92a, #ffe35a);
+            box-shadow: 0 12px 28px rgba(255, 211, 74, .5), inset 0 1px 0 rgba(255, 255, 255, .4);
+        }
+
+        .hint {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, .88);
+            opacity: .95;
+        }
+
+        body.valentine .screen {
+            background: linear-gradient(180deg, var(--screen) 0%, var(--screen2) 100%);
+        }
+
+        body.valentine .note {
+            background: rgba(214, 47, 47, .10);
+        }
+
+        /* Distinct card looks for deploy vs emote */
+        body.mode-deploy .right .panel {
+            background: linear-gradient(145deg, #f9f3ff, #ffeaf3);
+            box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .9), 0 14px 32px rgba(0, 0, 0, .35);
+        }
+
+        body.mode-deploy .pokedex {
+            border-color: rgba(255, 214, 230, .9);
+        }
+
+        body.mode-deploy .note {
+            background: #fff4fb;
+            border-color: #f7b5d3;
+            color: #5b1934;
+        }
+
+        /* Pink gradient for screenWrap when deployed */
+        body.mode-deploy .screenWrap {
+            background: linear-gradient(145deg, #ff6b9d, #ff8cc8);
+            box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .4);
+        }
+
+        body.mode-deploy .screen {
+            background: linear-gradient(180deg, var(--screen) 0%, var(--screen2) 100%);
+            border-color: rgba(255, 255, 255, .9);
+        }
+
+        body.mode-emote .right .panel {
+            background: linear-gradient(145deg, #fffaf0, #ffe6b8);
+            box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .9), 0 18px 40px rgba(0, 0, 0, .4);
+        }
+
+        body.mode-emote .pokedex {
+            border-color: rgba(255, 234, 164, .9);
+        }
+
+        body.mode-emote .note {
+            background: #fff3cf;
+            border-color: #f5c66b;
+            color: #5b4210;
+        }
+
+        body.mode-emote .screen {
+            background: linear-gradient(180deg, #ffe8f7 0%, #ffcc80 60%, #ff9bd5 100%);
+            border-color: rgba(255, 230, 180, .95);
+        }
+
+        @media (max-width: 860px) {
+            .pokedex {
+                grid-template-columns: 1fr;
+            }
+
+            .hinge {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="pokedex" aria-label="Classic Pokédex style card">
+        <div class="hinge"></div>
+
+        <section class="left">
+            <div class="topRow">
+                <div class="bigLight"></div>
+                <div class="tinyLights">
+                    <div class="tinyLight tl1"></div>
+                    <div class="tinyLight tl2"></div>
+                    <div class="tinyLight tl3"></div>
+                </div>
+                <div class="label" id="headerLabel">POKÉDEX</div>
+            </div>
+
+            <div class="screenWrap">
+                <div class="screen" id="screen">
+                    <div class="screenHeader">
+                        <div id="bannerText">VALENTINE EVENT</div>
+                        <div id="status">LOCKED</div>
+                    </div>
+
+                    <div class="spriteBox">
+                        <div class="scanline"></div>
+                        <div class="hearts" id="hearts"></div>
+                        <div class="emoteLines" id="emoteLines"></div>
+                        <div class="pixel" id="pixelSprite" aria-hidden="true"></div>
+                    </div>
+
+                    <div class="screenFooter">
+                        <div>Press A to Deploy</div>
+                        <div id="emoteHint">Press B to Emote</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="right">
+            <div class="panel">
+                <div class="entryTitle">
+                    <div class="name" id="name">HIS_NAME</div>
+                    <div class="dexNo" id="dexno">#0214</div>
+                </div>
+
+                <div class="note" id="note">locked: note locked. requirement: feb 14.</div>
+
+                <div class="kv">
+                    <div class="k">Type</div>
+                    <div class="v" id="type">Cute / Romantic (hidden)</div>
+
+                    <div class="k">Habitat</div>
+                    <div class="v" id="habitat">Spawns around the gym</div>
+
+                    <div class="k">Behavior</div>
+                    <div class="v" id="behavior">Plans dates suspiciously well</div>
+
+                    <div class="k">Event rate</div>
+                    <div class="v" id="eventRate">Valentine: 1/1</div>
+
+                    <div class="k">Catch Rate</div>
+                    <div class="v" id="catchRate">3/255 (very rare)</div>
+
+                    <div class="k">Signature move</div>
+                    <div class="v">Tiger Dash – closes distance to you with a plan in hand</div>
+
+                    <div class="k">HP</div>
+                    <div class="v" id="hp"></div>
+
+                    <div class="k">Atk</div>
+                    <div class="v" id="atk"></div>
+
+                    <div class="k">Def</div>
+                    <div class="v" id="def"></div>
+
+                    <div class="k">Sp. Atk</div>
+                    <div class="v" id="spAtk"></div>
+
+                    <div class="k">Sp. Def</div>
+                    <div class="v" id="spDef"></div>
+
+                    <div class="k">Speed</div>
+                    <div class="v" id="speed"></div>
+
+                    <div class="k">Arena</div>
+                    <div class="v" id="arena">Legendary Arena</div>
+
+                    <div class="k">Rarity</div>
+                    <div class="v" id="rarity">Legendary</div>
+
+                    <div class="k">Elixir</div>
+                    <div class="v" id="elixir">4</div>
+
+                    <div class="k">Win condition</div>
+                    <div class="v" id="wincon">Ask her out (super effective)</div>
+
+                    <div class="k">Evolution</div>
+                    <div class="v">Boyfriend Form (survive 1 month LDR to unlock his next Pokédex entry)</div>
+                </div>
+
+                <div class="controls">
+                    <button id="btnA" type="button">A: Deploy</button>
+                    <button id="btnB" type="button">B: Emote</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // =========================
+        // 1) EDIT ONLY THIS BLOCK
+        // =========================
+        const DATA = {
+            name: "Kaixiang",
+            dexNo: "#0214",
+
+            type: "Cute / Romantic (hidden)",
+            habitat: "Spawns around the gym",
+            behavior: "Plans dates suspiciously well",
+            eventRate: "Valentine: 1/1",
+            catchRate: "3/255 (very rare)",
+
+            arena: "Legendary Arena",
+            rarity: "Legendary",
+            elixir: "4",
+            winCon: "Date invite (super effective)",
+
+            // Stats (1-5 rating) - Standard Pokémon stats
+            hp: 5,
+            atk: 4,
+            def: 4,
+            spAtk: 5,
+            spDef: 4,
+            speed: 3,
+
+            noteDeployed: "Deployment successful. Yes. See you later 💗",
+            noteEmote: "🎉 Emote spam accepted. I’m smiling already.",
+
+            bannerTextLocked: "VALENTINE EVENT",
+            bannerTextDeployed: "ENTRY REGISTERED"
+        };
+
+        // =========================
+        // 2) WIRING (optimized)F
+        // =========================
+        const $ = (id) => document.getElementById(id);
+
+        const els = {
+            name: $("name"),
+            dexno: $("dexno"),
+            type: $("type"),
+            habitat: $("habitat"),
+            behavior: $("behavior"),
+            eventRate: $("eventRate"),
+            catchRate: $("catchRate"),
+            arena: $("arena"),
+            rarity: $("rarity"),
+            elixir: $("elixir"),
+            wincon: $("wincon"),
+            hp: $("hp"),
+            atk: $("atk"),
+            def: $("def"),
+            spAtk: $("spAtk"),
+            spDef: $("spDef"),
+            speed: $("speed"),
+            bannerText: $("bannerText"),
+            status: $("status"),
+            note: $("note"),
+            hearts: $("hearts"),
+            emoteLines: $("emoteLines"),
+            pixel: $("pixelSprite"),
+            screen: $("screen"),
+            emoteHint: $("emoteHint"),
+            btnA: $("btnA"),
+            btnB: $("btnB")
+        };
+
+        // Initial data binding
+        els.name.textContent = DATA.name;
+        els.dexno.textContent = DATA.dexNo;
+        els.type.textContent = DATA.type;
+        els.habitat.textContent = DATA.habitat;
+        els.behavior.textContent = DATA.behavior;
+        els.eventRate.textContent = DATA.eventRate;
+        els.catchRate.textContent = DATA.catchRate;
+        els.arena.textContent = DATA.arena;
+        els.rarity.textContent = DATA.rarity;
+        els.elixir.textContent = DATA.elixir;
+        els.wincon.textContent = DATA.winCon;
+        els.bannerText.textContent = DATA.bannerTextLocked;
+
+        // Render stat stars
+        function renderStars(element, rating) {
+            if (!element) return;
+            const stars = document.createElement("span");
+            stars.className = "statStars";
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement("span");
+                star.className = i <= rating ? "star" : "starEmpty";
+                star.textContent = "★";
+                stars.appendChild(star);
+            }
+            element.appendChild(stars);
+        }
+
+        renderStars(els.hp, DATA.hp);
+        renderStars(els.atk, DATA.atk);
+        renderStars(els.def, DATA.def);
+        renderStars(els.spAtk, DATA.spAtk);
+        renderStars(els.spDef, DATA.spDef);
+        renderStars(els.speed, DATA.speed);
+
+        function flashNoteError() {
+            const n = els.note;
+            if (!n) return;
+            n.classList.remove("note-error");
+            // force reflow
+            void n.offsetWidth;
+            n.classList.add("note-error");
+            setTimeout(() => {
+                n.classList.remove("note-error");
+            }, 400);
+        }
+
+        let deployed = false;
+        let emote = false;
+        let audioCtx = null;
+
+        const LOCK_MESSAGE = "locked: note locked. requirement: feb 14.";
+        const EARLY_DEPLOY_MESSAGE = "Early deployment blocked. This entry only unlocks on Feb 14. 😉";
+        const EARLY_EMOTE_MESSAGE = "Nice try. Emotes unlock on Feb 14 only. 💌";
+        // Dev helper: set to true while testing to bypass the date lock
+        const FORCE_DEV_UNLOCK = false;
+        const EMOTE_MESSAGES = [
+            "🎉 Emote spam accepted. I’m smiling already.",
+            "✨ Combo emote detected. Style points +10.",
+            "💫 Critical hit! Fluster level increased.",
+            "😳 Okay now I'm actually blushing.",
+            "🎮 Emote streak active. Don’t stop."
+        ];
+        const EMOTE_EMOJIS = ["💗", "✨", "💫", "😳", "🎮"];
+        const EMOTE_ICONS = [
+            "Emote: 💗",
+            "Emote: ✨",
+            "Emote: 💫",
+            "Emote: 😳",
+            "Emote: 🎮"
+        ];
+        const EMOTE_WORDS = [
+            "SMILE",
+            "SPARKLE",
+            "CRIT",
+            "BLUSH",
+            "GG"
+        ];
+        const DEPLOY_MESSAGES = [
+            DATA.noteDeployed,
+            "Trainer confirmed. Pokéball gently thrown.",
+            "Legendary entry deployed. Crowd goes wild.",
+            "Elixir full. Clash combo locked and loaded.",
+            "Overtime: feelings pushing for a crown tower.",
+            "Critical deploy! Super effective move.",
+            "Arena ready. Legendary status activated."
+        ];
+        const DEPLOY_WORDS = [
+            "DEPLOY",
+            "GO!",
+            "LEGENDARY!",
+            "COMBO!",
+            "OVERTIME!",
+            "CRITICAL!",
+            "READY!"
+        ];
+        let deployIndex = 0;
+        let emoteIndex = 0;
+        let currentDeployText = DATA.noteDeployed;
+        let currentEmoteText = DATA.noteEmote;
+
+        function isValentineToday() {
+            const now = new Date();
+            // February is month 1 (0-based)
+            return FORCE_DEV_UNLOCK || (now.getMonth() === 1 && now.getDate() === 14);
+        }
+
+        function beep(freq) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+
+            if (!audioCtx) {
+                audioCtx = new AudioCtx();
+            }
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            // Short, game‑y chirp instead of a flat beep
+            osc.type = "triangle";
+            const now = audioCtx.currentTime;
+            const start = now + 0.02;
+            const end = start + 0.14;
+
+            osc.frequency.setValueAtTime(freq, start);
+            osc.frequency.linearRampToValueAtTime(freq * 1.15, start + 0.09);
+
+            gain.gain.setValueAtTime(0.0, start);
+            gain.gain.linearRampToValueAtTime(0.035, start + 0.02);
+            gain.gain.linearRampToValueAtTime(0.0, end);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(start);
+            osc.stop(end);
+        }
+
+        function errorBeep() {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+
+            if (!audioCtx) {
+                audioCtx = new AudioCtx();
+            }
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            // Harsh, buzzy error sound - square wave, descending tone
+            osc.type = "square";
+            const now = audioCtx.currentTime;
+            const start = now + 0.02;
+            const end = start + 0.2;
+
+            // Start high, descend to low (error "buzz down")
+            osc.frequency.setValueAtTime(200, start);
+            osc.frequency.linearRampToValueAtTime(120, end);
+
+            // Harsher gain envelope
+            gain.gain.setValueAtTime(0.0, start);
+            gain.gain.linearRampToValueAtTime(0.05, start + 0.01);
+            gain.gain.linearRampToValueAtTime(0.0, end);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(start);
+            osc.stop(end);
+        }
+
+        function heartsBurst(kind = "heart", emojiChar) {
+            const wrap = els.hearts;
+            if (!wrap) return;
+            wrap.innerHTML = "";
+            const n = 10;
+            for (let i = 0; i < n; i++) {
+                let node;
+                if (kind === "emoji") {
+                    node = document.createElement("div");
+                    node.className = "emojiBurst";
+                    node.textContent = emojiChar || "💗";
+                } else {
+                    node = document.createElement("div");
+                    node.className = "heart";
+                }
+                node.style.left = (10 + Math.random() * 80) + "%";
+                node.style.bottom = (5 + Math.random() * 12) + "%";
+                node.style.animationDelay = (Math.random() * 0.15) + "s";
+                wrap.appendChild(node);
+            }
+            setTimeout(() => { wrap.innerHTML = ""; }, 1200);
+        }
+
+         function wordsBurst(text) {
+             const layer = els.emoteLines;
+             if (!layer) return;
+             layer.innerHTML = "";
+             const w = document.createElement("div");
+             w.className = "wordBurst";
+             w.textContent = text;
+             layer.appendChild(w);
+             setTimeout(() => { layer.innerHTML = ""; }, 1000);
+         }
+
+         function deployWordBurst(text) {
+             const layer = els.emoteLines;
+             if (!layer) return;
+             layer.innerHTML = "";
+             const w = document.createElement("div");
+             w.className = "wordBurst";
+             w.textContent = text;
+             layer.appendChild(w);
+             setTimeout(() => { layer.innerHTML = ""; }, 1000);
+         }
+
+        function triggerScreenAnimation(mode) {
+            const s = els.screen;
+            if (!s) return;
+            s.classList.remove("screen-deploy", "screen-emote");
+            // force reflow so animation can retrigger
+            void s.offsetWidth;
+            if (mode === "deploy") s.classList.add("screen-deploy");
+            if (mode === "emote") s.classList.add("screen-emote");
+        }
+
+        function runPixel() {
+            const p = els.pixel;
+            if (!p) return;
+            p.classList.remove("pixel-run", "pixel-jump");
+            // force reflow so animation can retrigger
+            void p.offsetWidth;
+            p.classList.add("pixel-run");
+        }
+
+        function jumpPixel() {
+            const p = els.pixel;
+            if (!p) return;
+            p.classList.remove("pixel-run", "pixel-jump");
+            // force reflow so animation can retrigger
+            void p.offsetWidth;
+            p.classList.add("pixel-jump");
+        }
+
+        function updateUI() {
+            els.status.textContent = deployed ? (emote ? "EMOTE" : "DEPLOYED") : "LOCKED";
+            els.note.textContent = deployed
+                ? (emote ? currentEmoteText : currentDeployText)
+                : LOCK_MESSAGE;
+            els.bannerText.textContent = deployed ? DATA.bannerTextDeployed : DATA.bannerTextLocked;
+            document.body.classList.toggle("valentine", deployed);
+            document.body.classList.toggle("mode-deploy", deployed && !emote);
+            document.body.classList.toggle("mode-emote", deployed && emote);
+            if (els.emoteHint) {
+                // Always show the original hint text on the card
+                els.emoteHint.textContent = "Press B to Emote";
+            }
+        }
+
+        function deploy() {
+            if (!isValentineToday()) {
+                deployed = false;
+                emote = false;
+                errorBeep();
+                updateUI();
+                // cheeky message when trying to deploy too early
+                els.note.textContent = EARLY_DEPLOY_MESSAGE;
+                flashNoteError();
+                return;
+            }
+            deployed = true;
+            emote = false;
+            // rotate through deploy messages
+            deployIndex = (deployIndex + 1) % DEPLOY_MESSAGES.length;
+            currentDeployText = DEPLOY_MESSAGES[deployIndex];
+            const deployWord = DEPLOY_WORDS[deployIndex];
+            heartsBurst("heart");
+            triggerScreenAnimation("deploy");
+            runPixel();
+            deployWordBurst(deployWord);
+            beep(520);
+            updateUI();
+        }
+
+        function toggleEmote() {
+            if (!isValentineToday()) {
+                deployed = false;
+                emote = false;
+                errorBeep();
+                updateUI();
+                // cheeky message when trying to emote too early
+                els.note.textContent = EARLY_EMOTE_MESSAGE;
+                flashNoteError();
+                return;
+            }
+            if (!deployed) deployed = true;
+            // Always stay in EMOTE mode when pressing B
+            emote = true;
+            // rotate through cheeky emote messages
+            emoteIndex = (emoteIndex + 1) % EMOTE_MESSAGES.length;
+            currentEmoteText = EMOTE_MESSAGES[emoteIndex];
+            const emojiChar = EMOTE_EMOJIS[emoteIndex];
+            const wordText = EMOTE_WORDS[emoteIndex];
+            heartsBurst("emoji", emojiChar);
+            wordsBurst(wordText);
+            triggerScreenAnimation("emote");
+            jumpPixel();
+            beep(660);
+            updateUI();
+        }
+
+        els.btnA.addEventListener("click", deploy);
+        els.btnB.addEventListener("click", toggleEmote);
+
+        window.addEventListener("keydown", (e) => {
+            const k = e.key.toLowerCase();
+            if (k === "a") deploy();
+            if (k === "b") toggleEmote();
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
