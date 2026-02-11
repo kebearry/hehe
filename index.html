@@ -381,6 +381,78 @@
             gap: 10px;
             justify-content: space-between;
             font-weight: 800;
+            align-items: center;
+        }
+
+        .footerLeft, .footerRight {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footerRight {
+            flex-direction: row-reverse;
+        }
+
+        .gameButton {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 16px;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+
+        /* Locked state - grey buttons */
+        .gameButtonA {
+            background: rgba(0, 0, 0, .18);
+            color: rgba(255, 255, 255, .92);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+        }
+
+        .gameButtonB {
+            background: rgba(0, 0, 0, .18);
+            color: rgba(255, 255, 255, .92);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Unlocked state - match deploy/emote button colors */
+        body.valentine .gameButtonA {
+            background: linear-gradient(145deg, #ff6b9d, #ff8cc8);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, .3);
+            box-shadow: 0 4px 8px rgba(255, 107, 157, .4), inset 0 2px 4px rgba(255, 255, 255, .3);
+            text-shadow: none;
+        }
+
+        body.valentine .gameButtonB {
+            background: linear-gradient(145deg, #ffd34a, #ffeb7a);
+            color: #5b4210;
+            border: 1px solid rgba(255, 255, 255, .3);
+            box-shadow: 0 4px 8px rgba(255, 211, 74, .4), inset 0 2px 4px rgba(255, 255, 255, .3);
+            text-shadow: none;
+        }
+
+        body.valentine .gameButtonA:hover {
+            background: linear-gradient(145deg, #ff5a8a, #ff7bb8);
+            box-shadow: 0 6px 12px rgba(255, 107, 157, .5), inset 0 2px 4px rgba(255, 255, 255, .4);
+        }
+
+        body.valentine .gameButtonB:hover {
+            background: linear-gradient(145deg, #ffc92a, #ffe35a);
+            box-shadow: 0 6px 12px rgba(255, 211, 74, .5), inset 0 2px 4px rgba(255, 255, 255, .4);
+        }
+
+        .gameButton:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.2);
         }
 
         .hearts {
@@ -797,8 +869,14 @@
                     </div>
 
                     <div class="screenFooter">
-                        <div>Press A to Deploy</div>
-                        <div id="emoteHint">Press B to Emote</div>
+                        <div class="footerLeft">
+                            <div class="gameButton gameButtonA" id="gameBtnA">A</div>
+                            <span>Press A to Deploy</span>
+                        </div>
+                        <div class="footerRight">
+                            <span id="emoteHint">Press B to Emote</span>
+                            <div class="gameButton gameButtonB" id="gameBtnB">B</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -940,7 +1018,9 @@
             screen: $("screen"),
             emoteHint: $("emoteHint"),
             btnA: $("btnA"),
-            btnB: $("btnB")
+            btnB: $("btnB"),
+            gameBtnA: $("gameBtnA"),
+            gameBtnB: $("gameBtnB")
         };
 
         // Initial data binding
@@ -1256,6 +1336,8 @@
 
         els.btnA.addEventListener("click", deploy);
         els.btnB.addEventListener("click", toggleEmote);
+        els.gameBtnA.addEventListener("click", deploy);
+        els.gameBtnB.addEventListener("click", toggleEmote);
 
         window.addEventListener("keydown", (e) => {
             const k = e.key.toLowerCase();
