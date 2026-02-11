@@ -148,7 +148,7 @@
             border-radius: 10px;
             border: 2px solid rgba(0, 0, 0, .35);
             padding: 12px;
-            height: 270px;
+            min-height: 270px;
             display: grid;
             grid-template-rows: auto 1fr auto;
             gap: 10px;
@@ -222,6 +222,8 @@
             background: rgba(255, 255, 255, .12);
             position: relative;
             overflow: hidden;
+            min-height: 120px;
+            padding: 10px;
         }
 
         .pixel {
@@ -720,6 +722,28 @@
 
             .name {
                 font-size: 20px;
+            }
+
+            .screen {
+                min-height: auto;
+                padding: 10px;
+            }
+
+            .spriteBox {
+                min-height: 100px;
+                padding: 8px;
+            }
+
+            .pixel {
+                transform: translateX(-140%) scale(1.8) !important;
+            }
+
+            body:not(.valentine) .pixel {
+                transform: translateX(0) scale(1.8) !important;
+            }
+
+            .pixel::before {
+                font-size: 32px;
             }
         }
     </style>
