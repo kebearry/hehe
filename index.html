@@ -154,7 +154,7 @@
             gap: 10px;
             color: var(--ink);
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             image-rendering: pixelated;
         }
 
@@ -221,9 +221,9 @@
             border-radius: 8px;
             background: rgba(255, 255, 255, .12);
             position: relative;
-            overflow: hidden;
-            min-height: 120px;
-            padding: 10px;
+            overflow: visible;
+            min-height: 140px;
+            padding: 15px;
         }
 
         .pixel {
@@ -232,14 +232,14 @@
             height: 10px;
             background: transparent;
             position: relative;
-            transform: translateX(-140%) scale(2.2);
+            transform: translateX(-140%) scale(1.9);
             filter: drop-shadow(0 6px 0 rgba(0, 0, 0, .15));
             opacity: .95;
         }
 
         /* Locked state: show greyed out tiger centered */
         body:not(.valentine) .pixel {
-            transform: translateX(0) scale(2.2);
+            transform: translateX(0) scale(1.9);
         }
 
         .pixel::before {
@@ -248,8 +248,8 @@
             position: absolute;
             left: 50%;
             top: 50%;
-            transform: translate(-50%, -52%);
-            font-size: 40px; /* larger so the stripes read more clearly as a tiger */
+            transform: translate(-50%, -50%);
+            font-size: 36px; /* slightly smaller to ensure it fits */
         }
 
         /* Greyed out/silhouette effect when locked */
@@ -730,20 +730,25 @@
             }
 
             .spriteBox {
-                min-height: 100px;
-                padding: 8px;
+                min-height: 120px;
+                padding: 12px;
+                overflow: visible;
+            }
+
+            .screen {
+                overflow: visible;
             }
 
             .pixel {
-                transform: translateX(-140%) scale(1.8) !important;
+                transform: translateX(-140%) scale(1.6) !important;
             }
 
             body:not(.valentine) .pixel {
-                transform: translateX(0) scale(1.8) !important;
+                transform: translateX(0) scale(1.6) !important;
             }
 
             .pixel::before {
-                font-size: 32px;
+                font-size: 30px;
             }
         }
     </style>
