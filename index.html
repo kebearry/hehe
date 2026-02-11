@@ -35,6 +35,7 @@
             font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
             color: #111;
             padding: 20px;
+            overflow-x: hidden;
         }
 
         .pokedex {
@@ -664,12 +665,38 @@
         }
 
         @media (max-width: 860px) {
+            body {
+                padding: 10px;
+            }
+
             .pokedex {
                 grid-template-columns: 1fr;
+                width: min(100%, calc(100vw - 20px));
+                padding: 12px;
+                gap: 12px;
             }
 
             .hinge {
                 display: none;
+            }
+
+            .left, .right {
+                padding: 10px;
+            }
+
+            .right .panel {
+                padding: 10px;
+                min-height: auto;
+            }
+
+            .kv {
+                font-size: 13px;
+                padding: 8px;
+                gap: 8px 10px;
+            }
+
+            .name {
+                font-size: 20px;
             }
         }
     </style>
